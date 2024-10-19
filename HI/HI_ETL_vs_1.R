@@ -63,8 +63,7 @@ dbWriteTable(
                    table = "hi_2024"),
     value = df_hi,
     overwrite = TRUE,
-    row.names = FALSE,
-    field.types = field_types
+    row.names = FALSE
 )
 
 # Cerrar la conexión
