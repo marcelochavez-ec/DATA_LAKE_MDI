@@ -6,7 +6,19 @@ library(RPostgreSQL)
 
 df_hi <- read.xlsx("HI/mdi_homicidiosintencionales_pm_2024_enero-septiembre.xlsx",
                    detectDates = T,
-                   sheet = "MDI_HomicidiosIntencionales_PM")
+                   sheet = "MDI_HomicidiosIntencionales_PM") %>% 
+mutate(rango_edad = case_when(
+    edad >= 0 & edad <= 10 ~ "0-10 años",
+    edad >= 11 & edad <= 20 ~ "11-20 años",
+    edad >= 21 & edad <= 30 ~ "21-30 años",
+    edad >= 31 & edad <= 40 ~ "31-40 años",
+    edad >= 41 & edad <= 50 ~ "41-50 años",
+    edad >= 51 & edad <= 60 ~ "51-60 años",
+    edad >= 61 & edad <= 70 ~ "61-70 años",
+    edad >= 71 & edad <= 80 ~ "71-80 años",
+    edad >= 81 ~ "81 años en adelante"
+),
+total=1)
 
 # Definir los tipos de datos
 field_types <- c(
@@ -21,19 +33,19 @@ field_types <- c(
     "codigo_provincia" = "INTEGER",                  # 9
     "canton" = "VARCHAR",                            # 10
     "codigo_canton" = "VARCHAR",                     # 11
-    "coordenada_y" = "FLOAT(2)",                    # 12
-    "coordenada_x" = "FLOAT(2)",                    # 13
+    "coordenada_y" = "FLOAT(2)",                     # 12
+    "coordenada_x" = "FLOAT(2)",                     # 13
     "area_hecho" = "VARCHAR",                        # 14
     "lugar" = "VARCHAR",                             # 15
     "tipo_lugar" = "VARCHAR",                        # 16
-    "fecha_infraccion" = "DATE",                    # 17
-    "hora_infraccion" = "FLOAT(2)",                 # 18
+    "fecha_infraccion" = "DATE",                     # 17
+    "hora_infraccion" = "FLOAT(2)",                  # 18
     "arma" = "VARCHAR",                              # 19
     "tipo_arma" = "VARCHAR",                         # 20
     "presunta_motivacion" = "VARCHAR",               # 21
     "presunta_motivacion_observada" = "VARCHAR",     # 22
     "probable_causa_motivada" = "VARCHAR",           # 23
-    "edad" = "FLOAT(2)",                            # 24
+    "edad" = "FLOAT(2)",                             # 24
     "medida_edad" = "VARCHAR",                       # 25
     "sexo" = "VARCHAR",                              # 26
     "genero" = "VARCHAR",                            # 27
@@ -43,9 +55,11 @@ field_types <- c(
     "discapacidad" = "VARCHAR",                      # 31
     "profesional_registro_civil" = "VARCHAR",        # 32
     "instruccion" = "VARCHAR",                       # 33
-    "antecedentes" = "VARCHAR"                       # 34
+    "antecedentes" = "VARCHAR",                      # 34
+    "rango_edad" = "VARCHAR",                        # 35
+    "total" = "numeric(0)"
 )
-
+    
 # Conectar a PostgreSQL
 postgres <- dbConnect(
     RPostgres::Postgres(),
