@@ -18,7 +18,17 @@ mutate(rango_edad = case_when(
     edad >= 71 & edad <= 80 ~ "71-80 años",
     edad >= 81 ~ "81 años en adelante"
 ),
-total=1)
+total=1,
+mayores_menores = ifelse(edad>=18,"Mayores de edad","Menores de edad"))
+
+
+df_hi_map <- df_hi %>% 
+    mutate(codigo_provincia = case_when(
+        nchar(codigo_provincia) == 1 & codigo_provincia %in% 1:9 ~ paste0("0", as.character(codigo_provincia)),
+        TRUE ~ as.character(codigo_provincia))) %>% 
+    group_by(fecha_infraccion,
+             codigo_provincia) %>% 
+    summarise(total_hi = n(), .groups = "drop")
 
 # Definir los tipos de datos
 field_types <- c(
@@ -76,6 +86,17 @@ dbWriteTable(
     name = DBI::Id(schema = "data_lake",
                    table = "hi_2024"),
     value = df_hi,
+    overwrite = TRUE,
+    row.names = FALSE
+)
+
+
+# Guardar la tabla en PostgreSQL con los tipos de columnas especificados
+dbWriteTable(
+    conn = postgres,
+    name = DBI::Id(schema = "data_lake",
+                   table = "hi_2024_map"),
+    value = df_hi_map,
     overwrite = TRUE,
     row.names = FALSE
 )
