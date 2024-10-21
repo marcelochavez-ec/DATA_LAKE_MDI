@@ -21,7 +21,7 @@ dpa_2024 <- read.xlsx("CATALOGOS/CODIFICACION_2024.xlsx",
     rename("codigo_provincia"="DPA_PROVIN",
            "provincia"="DPA_DESPRO")
 
-df_hi <- read.xlsx("HI/mdi_homicidiosintencionales_pm_2024_enero-septiembre.xlsx",
+df_hi <- read.xlsx("HI/DB/mdi_homicidiosintencionales_pm_2024_enero-septiembre.xlsx",
                    detectDates = T,
                    sheet = "MDI_HomicidiosIntencionales_PM") %>% 
 mutate(rango_edad = case_when(
