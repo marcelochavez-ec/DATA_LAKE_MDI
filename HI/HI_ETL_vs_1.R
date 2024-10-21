@@ -4,6 +4,23 @@ library(tidyverse)
 library(openxlsx)
 library(RPostgreSQL)
 
+# Conexión a PostgreSQL:
+postgres <- dbConnect(
+    RPostgres::Postgres(),
+    dbname = "mdi_dwh",
+    host = "localhost",  # Cambiar según configuración
+    port = 5432,         # Puerto de PostgreSQL
+    user = "postgres",   # Usuario de PostgreSQL
+    password = "marce"  # Contraseña de PostgreSQL
+)
+
+dpa_2024 <- read.xlsx("CATALOGOS/CODIFICACION_2024.xlsx",
+                      startRow = 2, 
+                      cols = 2:ncol(read.xlsx("CATALOGOS/CODIFICACION_2024.xlsx")),
+                      sheet = "PROVINCIAS") %>% 
+    rename("codigo_provincia"="DPA_PROVIN",
+           "provincia"="DPA_DESPRO")
+
 df_hi <- read.xlsx("HI/mdi_homicidiosintencionales_pm_2024_enero-septiembre.xlsx",
                    detectDates = T,
                    sheet = "MDI_HomicidiosIntencionales_PM") %>% 
@@ -18,16 +35,25 @@ mutate(rango_edad = case_when(
     edad >= 71 & edad <= 80 ~ "71-80 años",
     edad >= 81 ~ "81 años en adelante"
 ),
+codigo_provincia = case_when(
+    nchar(codigo_provincia) == 1 & codigo_provincia %in% 1:9 ~ paste0("0", as.character(codigo_provincia)),
+    TRUE ~ as.character(codigo_provincia)),
 total=1,
-mayores_menores = ifelse(edad>=18,"Mayores de edad","Menores de edad"))
+mayores_menores = ifelse(edad>=18,"Mayores de edad","Menores de edad"),
+sexo = case_when(
+  sexo == "HOMBRE" ~ "Hombres",
+  sexo == "MUJER" ~ "Mujeres",
+  TRUE ~ "Sin determinar" 
+  )) %>% 
+    select(-provincia)
 
+df_hi <- merge(df_hi,
+               dpa_2024,
+               by="codigo_provincia")
 
-df_hi_map <- df_hi %>% 
-    mutate(codigo_provincia = case_when(
-        nchar(codigo_provincia) == 1 & codigo_provincia %in% 1:9 ~ paste0("0", as.character(codigo_provincia)),
-        TRUE ~ as.character(codigo_provincia))) %>% 
+df_hi_map <- df_hi %>%
     group_by(fecha_infraccion,
-             codigo_provincia) %>% 
+             provincia) %>% 
     summarise(total_hi = n(), .groups = "drop")
 
 # Definir los tipos de datos
@@ -70,17 +96,7 @@ field_types <- c(
     "total" = "numeric(0)"
 )
     
-# Conectar a PostgreSQL
-postgres <- dbConnect(
-    RPostgres::Postgres(),
-    dbname = "mdi_dwh",
-    host = "localhost",  # Cambiar según configuración
-    port = 5432,         # Puerto de PostgreSQL
-    user = "postgres",   # Usuario de PostgreSQL
-    password = "marce"  # Contraseña de PostgreSQL
-)
-
-# Guardar la tabla en PostgreSQL con los tipos de columnas especificados
+# Guarda la tabla df_hi en PostgreSQL
 dbWriteTable(
     conn = postgres,
     name = DBI::Id(schema = "data_lake",
@@ -90,8 +106,7 @@ dbWriteTable(
     row.names = FALSE
 )
 
-
-# Guardar la tabla en PostgreSQL con los tipos de columnas especificados
+# Guarda la tabla df_hi_map en PostgreSQL
 dbWriteTable(
     conn = postgres,
     name = DBI::Id(schema = "data_lake",
