@@ -1,6 +1,6 @@
 <h1 align="center">Ministerio del Interior - Dirección de Estadística y Economía de la Seguridad</h1>
 <h2 align="center">Data Warehouse Analítico con <strong>R</strong></h2>
-<p align="center"><IMG src="IMG_github/logo_mdi.png"/></p> 
+<p align="center"><IMG src="IMG/logo_mdi.png"/></p> 
 
 Código de tipo **ETL** _*(Extract, Transform, Load)*_ desarrollados en **R** para la construcción del Data Warehouse Analítico de la Secretaría de Desarrollo Económico y Productivo del Municipio del Distrito Metropolitano de Quito.
 
