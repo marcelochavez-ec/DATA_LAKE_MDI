@@ -7,6 +7,17 @@ library(purrr)
 library(glue)
 library(lubridate)
 library(stringr)
+library(RPostgreSQL)
+
+# Conexión a PostgreSQL:
+postgres <- dbConnect(
+    RPostgres::Postgres(),
+    dbname = "mdi_dwh",
+    host = "localhost",  # Cambiar según configuración
+    port = 5432,         # Puerto de PostgreSQL
+    user = "postgres",   # Usuario de PostgreSQL
+    password = "marce"  # Contraseña de PostgreSQL
+)
 
 # Función para cargar varios archivos con manejo de errores
 cargar_archivos_homicidios <- function(url_base, fecha_inicio, fecha_fin) {
@@ -57,9 +68,6 @@ fecha_fin <- Sys.Date()
 # Llamar a la función para cargar los archivos
 dataframes <- cargar_archivos_homicidios(url_base, fecha_inicio, fecha_fin)
 
-# Revisar los dataframes cargados
-dataframes
-
 # Función para hacer rbind y manejar columnas faltantes
 rbind_multiple <- function(...) {
     # Listar todos los data frames que se pasan a la función
@@ -83,9 +91,13 @@ rbind_multiple <- function(...) {
 # Usar do.call para aplicar la función a la lista de dataframes
 df_cs_hi <- do.call(rbind_multiple, dataframes)
 
-# Mostrar el data frame combinado
-print("Data frame combinado:")
-print(df_combined)
-
-
+# Guarda la tabla df_hi_map en PostgreSQL
+dbWriteTable(
+    conn = postgres,
+    name = DBI::Id(schema = "data_lake",
+                   table = "hi_2024_cs"),
+    value = df_cs_hi,
+    overwrite = TRUE,
+    row.names = FALSE
+)
 
