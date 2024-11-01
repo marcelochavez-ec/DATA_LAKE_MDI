@@ -8,6 +8,7 @@ library(glue)
 library(lubridate)
 library(stringr)
 library(RPostgreSQL)
+library(openxlsx)
 
 # Conexión a PostgreSQL:
 postgres <- dbConnect(
@@ -88,16 +89,38 @@ rbind_multiple <- function(...) {
     return(bind_rows(dfs_completados))
 }
 
+df_hi_14_23 <- read.xlsx("OE_HI/DB/mdi_homicidios_intencionales_pm_2014_2023.xlsx",
+                        sheet = "MDI_HomicidiosIntencionales_PM", 
+                        detectDates = T)
+
+df_hi_2024 <- read.xlsx("OE_HI/DB/mdi_homicidiosintencionales_pm_2024_enero-septiembre.xlsx",
+                        sheet = "MDI_HomicidiosIntencionales_PM", 
+                        detectDates = T)
+
+df_hi_total <- rbind(df_hi_14_23, df_hi_2024)
+
+
+dbWriteTable(
+    conn = postgres,
+    name = DBI::Id(schema = "data_lake",
+                   table = "hi_total"),
+    value = df_hi_total,
+    overwrite = TRUE,
+    row.names = FALSE
+)
+
 # Usar do.call para aplicar la función a la lista de dataframes
-df_cs_hi <- do.call(rbind_multiple, dataframes)
+df_cs_hi <- do.call(rbind_multiple, df_hi_total)
+
 
 # Guarda la tabla df_hi_map en PostgreSQL
 dbWriteTable(
     conn = postgres,
     name = DBI::Id(schema = "data_lake",
-                   table = "hi_2024_cs"),
-    value = df_cs_hi,
+                   table = "hi_total"),
+    value = df_hi_total,
     overwrite = TRUE,
     row.names = FALSE
 )
+
 
