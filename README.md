@@ -30,9 +30,8 @@ Esta es una plantilla basada en los estándares de la Guía de publicación de h
 ### Ecosistema de **R**
 
 - ![R](https://img.shields.io/badge/Made_with-R-1f425f.svg)
-- ![Shiny](https://img.shields.io/badge/Shiny-App-blue)
 - ![Tidyverse](https://img.shields.io/badge/Tidyverse-1.3.1-brightgreen)
-- ![RPostgreSQL](https://img.shields.io/badge/RPostgreSQL-0.7.3-yellow)
+- ![pool](https://img.shields.io/badge/pool-1.6.0-yellow)
 - ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 ## Descripción y contexto
