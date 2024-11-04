@@ -3,6 +3,7 @@ rm(list=ls(all.names = T))
 library(tidyverse)
 library(openxlsx)
 library(RPostgreSQL)
+library(pool)
 
 # Conexión a PostgreSQL:
 postgres <- dbConnect(
