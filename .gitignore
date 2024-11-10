@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-SHAPES/
 .secreto_token.rds
+SHAPES/
 PYTHON/
+OE_HI/DB
