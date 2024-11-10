@@ -69,3 +69,23 @@ ConsignaDiariaLoader <- R6Class(
         }
     )
 )
+
+# Crear una instancia de la clase y ejecutar el proceso
+loader <- ConsignaDiariaLoader$new(
+    directory = "OE_HI/DB/ConsignaDiaria",
+    dbname = "mdi_dwh",
+    host = "tu_host",
+    port = 5432,
+    user = "tu_usuario",
+    password = "tu_contraseña",
+    schema = "data_lake",
+    table_name = "hi_consigna_diaria"
+)
+
+# Cargar y guardar los archivos
+loader$load_files()
+
+# Finalizar la conexión
+loader$finalize()
+
+
