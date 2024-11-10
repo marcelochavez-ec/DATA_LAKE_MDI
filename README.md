@@ -1,4 +1,4 @@
-<h1 align="center">Ministerio del Interior - Dirección de Estadística y Economía de la Seguridad</h1>
+<h1 align="center">Ministerio del Interior - Dirección de Estadística de la Seguridad</h1>
 <h2 align="center">Data Warehouse Analítico con <strong>R</strong></h2>
 <p align="center"><IMG src="IMG/logo_mdi.png"/></p> 
 
