@@ -44,5 +44,5 @@ Para usar esta herramienta digital, sigue los siguientes pasos:
 
 **Clonar el repositorio:**
    ```sh
-   git clone https://github.com/tu-usuario/MDMQ_DWA.git
+   git clone https://github.com/tu-usuario/DATA_LAKE_MDI.git
    ```
