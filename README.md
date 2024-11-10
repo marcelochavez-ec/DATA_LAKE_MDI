@@ -25,8 +25,6 @@ Esta es una plantilla basada en los estándares de la Guía de publicación de h
 - ![R6](https://img.shields.io/badge/R6-2.5.1-orange)
 - ![DBI](https://img.shields.io/badge/DBI-1.1.3-lightgrey)
 - ![RPostgreSQL](https://img.shields.io/badge/RPostgreSQL-0.7.3-9cf)
-- ![dplyr](https://img.shields.io/badge/dplyr-1.1.1-brightgreen)
-- ![readr](https://img.shields.io/badge/readr-2.1.2-blue)
 - ![stringr](https://img.shields.io/badge/stringr-1.4.0-purple)
 - ![lubridate](https://img.shields.io/badge/lubridate-1.8.0-ff69b4)
 - ![Quarto](https://img.shields.io/badge/Quarto-1.2.0-blueviolet)
