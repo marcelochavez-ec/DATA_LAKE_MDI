@@ -90,8 +90,8 @@ rbind_multiple <- function(...) {
 }
 
 df_hi_14_23 <- read.xlsx("OE_HI/DB/mdi_homicidios_intencionales_pm_2014_2023.xlsx",
-                        sheet = "MDI_HomicidiosIntencionales_PM", 
-                        detectDates = T)
+                         sheet = "MDI_HomicidiosIntencionales_PM", 
+                         detectDates = T)
 
 df_hi_2024 <- read.xlsx("OE_HI/DB/mdi_homicidiosintencionales_pm_2024_enero-septiembre.xlsx",
                         sheet = "MDI_HomicidiosIntencionales_PM", 
@@ -122,5 +122,3 @@ dbWriteTable(
     overwrite = TRUE,
     row.names = FALSE
 )
-
-
